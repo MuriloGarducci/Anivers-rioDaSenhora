@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Um Local de Memórias Mágicas</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <style>
+        body {
+            background-color: #1A472A; /* Verde Sonserina */
+            color: #C0C0C0; /* Prata */
+            font-family: 'Garamond', serif;
+        }
+
+        /* Header */
+        .header {
+            background-color: #0D341E;
+            padding: 20px 0;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.8);
+            position: relative;
+        }
+
+        .header i {
+            font-size: 3rem;
+            color: #C0C0C0;
+            text-shadow: 2px 2px 5px #000;
+            position: absolute;
+            top: 10px;
+            left: 20px;
+        }
+
+        .header-title {
+            color: #A8B2A1;
+            font-size: 2.5rem;
+            text-shadow: 2px 2px 5px #000;
+        }
+
+        .header-subtitle {
+            color: #C0C0C0;
+            font-size: 1.2rem;
+            margin-top: 5px;
+        }
+
+        /* Espaço da carta */
+        .magic-card {
+            text-align: center;
+            margin: 30px auto;
+            position: relative;
+            max-width: 500px;
+            padding: 20px;
+            background: url('https://www.transparenttextures.com/patterns/old-wall.png');
+            border: 5px solid #A8B2A1;
+            border-radius: 15px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.9);
+        }
+
+        .magic-card img {
+            width: 250px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .magic-card img:hover {
+            transform: scale(1.1);
+            filter: brightness(1.2);
+        }
+
+        .hidden-message {
+            display: none;
+            background: linear-gradient(145deg, #BFAF97, #DFD1BB);
+            padding: 20px;
+            color: #1A472A;
+            border: 2px dashed #7A5C39;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.9);
+            font-size: 1.2rem;
+            margin-top: 20px;
+            line-height: 1.6;
+            position: relative;
+        }
+
+        .hidden-message::before {
+            content: '\f02e';
+            font-family: 'Font Awesome 5 Free';
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 2rem;
+            color: #7A5C39;
+        }
+
+        .hidden-message .highlight {
+            font-weight: bold;
+            color: #7A5C39;
+            font-style: italic;
+        }
+
+        .hidden-message .highlight:hover {
+            color: #1A472A;
+            transition: color 0.3s ease-in-out;
+        }
+
+        .hidden-message .highlight.red {
+            color: #A20000;
+        }
+
+        .hidden-message .highlight.red:hover {
+            color: #D70000;
+        }
+
+        .hidden-message .highlight i {
+            margin-right: 5px;
+            color: #FFD700;
+        }
+        .hidden-message .highlight_expec {
+            font-weight: bold;
+            color: #119ef0;
+            text-decoration: underline;
+        }
+
+        /* Carrossel */
+        .container {
+            background-color: rgba(0, 0, 0, 0.6); /* Fundo translúcido */
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.9);
+        }
+
+        .carousel-item img {
+            width: 100%;
+            height: auto;
+            border: 10px solid #A8B2A1;
+            border-radius: 15px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.9);
+            transition: transform 0.5s ease, box-shadow 0.5s ease;
+            max-height: 700px;
+        }
+
+        .carousel-item img:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 1);
+        }
+
+        h2 {
+            color: #A8B2A1;
+            text-align: center;
+            text-shadow: 2px 2px 5px #000;
+        }
+
+        /* Footer */
+        .footer {
+            background-color: #0D341E;
+            padding: 10px 0;
+            text-align: center;
+            border-top: 3px solid #A8B2A1;
+            margin-top:20px;
+        }
+
+        .footer p {
+            margin: 0;
+            color: #C0C0C0;
+            font-size: 1.1rem;
+        }
+
+        .footer i {
+            color: #C0C0C0;
+            margin: 0 5px;
+        }
+
+        /* Mobile Styles */
+        @media (max-width: 768px) {
+            .header-title {
+                font-size: 1.8rem;
+            }
+
+            .header-subtitle {
+                font-size: 1rem;
+            }
+
+            .magic-card img {
+                width: 200px;
+            }
+
+            .hidden-message {
+                font-size: 1rem;
+            }
+
+            h2 {
+                font-size: 1.5rem;
+            }
+
+            .carousel-item img {
+                border: 5px solid #A8B2A1;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Header -->
+<div class="header">
+    <i class="fas fa-hat-wizard"></i>
+    <div class="header-content">
+        <div class="header-title">Um Local de Memórias Mágicas</div>
+        <div class="header-subtitle">Uma carta para... <u>Beatriz Rodrigues!</u></div>
+    </div>
+</div>
+
+<!-- Espaço para Carta -->
+<div class="magic-card">
+    <img src="carta.png" alt="Carta Mágica" id="magicCard">
+    <div class="hidden-message" id="magicMessage">
+        <p class="magic-font">Feliz Aniversário!</p>
+        <p>
+            Que seu dia seja tão <span class="highlight"><i class="fas fa-star"></i>mágico</span> quanto as aulas de 
+            <span class="highlight red"><i class="fas fa-broom"></i>Defesa Contra as Artes das Trevas, ou as de ciências com a Renata</span>,
+            Saiba que sempre seremos amigos, quando precisar rir, deixa que eu faço um <span class="highlight">Rictusempra</span>,
+            que cada momento de sua vida seja tão <span class="highlight"><i class="fas fa-lightbulb"></i>brilhante</span> quanto um feitiço de 
+            <span class="highlight"><i class="fas fa-wand-magic"></i>Lumos</span>.
+            Quando uma porta se fechar na sua vida, não desvie ou procure outra, taca-lhe um <span class="highlight">Alorromora</span> e dale
+            mas quando precisas, pode chamar também, sempre que cunjuro um <span class="highlight_expec">Expecto Patronum</span>, você é a memória que me aparece<i class="fas fa-heart"></i>
+            <u>(Viadagens a parte)</u>
+            Espero que curta seu dia<i class="fas fa-star"></i>
+        </p>
+    </div>
+</div>
+
+<!-- Conteúdo Principal -->
+<div class="container">
+    <h2>Carrossel de Sonserina - Parte 1</h2>
+    <div id="carouselExample1" class="carousel slide" data-ride="carousel">
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <img src="povo/povo.jpg" class="d-block" alt="Imagem 1">
+            </div>
+            
+            <div class="carousel-item">
+                <img src="povo/povo2.jpg" class="d-block" alt="Imagem 3">
+            </div>
+            <div class="carousel-item">
+                <img src="povo/povo3.jpg" class="d-block" alt="Imagem 2">
+            </div>
+            <div class="carousel-item">
+                <img src="povo/povo4.jpg" class="d-block" alt="Imagem 3">
+            </div>
+            <div class="carousel-item">
+                <img src="povo/povo5.jpg" class="d-block" alt="Imagem 2">
+            </div>
+            <div class="carousel-item">
+                <img src="povo/povo6.jpg" class="d-block" alt="Imagem 3">
+            </div>
+            <div class="carousel-item">
+                <img src="povo/povo7.jpg" class="d-block" alt="Imagem 2">
+            </div>
+            <div class="carousel-item">
+                <img src="povo/povo8.jpg" class="d-block" alt="Imagem 3">
+            </div>      <div class="carousel-item">
+                <img src="povo/povo9.jpg" class="d-block" alt="Imagem 2">
+            </div>
+            <div class="carousel-item">
+                <img src="povo/povo10.jpg" class="d-block" alt="Imagem 3">
+            </div>      <div class="carousel-item">
+                <img src="povo/povo11.jpg" class="d-block" alt="Imagem 2">
+            </div>
+            <div class="carousel-item">
+                <img src="povo/povo12.jpg" class="d-block" alt="Imagem 3">
+            </div>      <div class="carousel-item">
+                <img src="povo/povo13.jpg" class="d-block" alt="Imagem 2">
+            </div>
+            <div class="carousel-item">
+                <img src="povo/povo14.jpg" class="d-block" alt="Imagem 3">
+            </div>      <div class="carousel-item">
+                <img src="povo/povo15.jpg" class="d-block" alt="Imagem 2">
+            </div>
+            <div class="carousel-item">
+                <img src="povo/povo16.jpg" class="d-block" alt="Imagem 3">
+            </div>
+            <div class="carousel-item">
+                <img src="povo/povo17.jpg" class="d-block" alt="Imagem 3">
+            </div>
+            <div class="carousel-item">
+                <img src="povo/povo18.jpg" class="d-block" alt="Imagem 2">
+            </div>
+            <div class="carousel-item">
+                <img src="povo/povo19.jpg" class="d-block" alt="Imagem 3">
+            </div>
+            <div class="carousel-item">
+                <img src="povo/povo20.jpg" class="d-block" alt="Imagem 3">
+            </div>
+            <div class="carousel-item">
+                <img src="povo/povo21.jpg" class="d-block" alt="Imagem 2">
+            </div>
+            <div class="carousel-item">
+                <img src="povo/povo22.jpg" class="d-block" alt="Imagem 3">
+            </div>
+            <div class="carousel-item">
+                <img src="povo/povo23.jpg" class="d-block" alt="Imagem 3">
+            </div>
+            <div class="carousel-item">
+                <img src="povo/povo24.jpg" class="d-block" alt="Imagem 2">
+            </div>
+            <div class="carousel-item">
+                <img src="povo/povo25.jpg" class="d-block" alt="Imagem 3">
+            </div>
+            <div class="carousel-item">
+                <img src="povo/povo26.jpg" class="d-block" alt="Imagem 3">
+            </div>
+            <div class="carousel-item">
+                <img src="povo/povo27.jpg" class="d-block" alt="Imagem 3">
+            </div>
+        </div>
+        <a class="carousel-control-prev" href="#carouselExample1" role="button" data-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="sr-only">Anterior</span>
+        </a>
+        <a class="carousel-control-next" href="#carouselExample1" role="button" data-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="sr-only">Próximo</span>
+        </a>
+    </div>
+    
+</div>
+<div class="container mt-5">
+    <h2>Carrossel de Sonserina - Parte 1</h2>
+    <div id="carouselExample2" class="carousel slide" data-ride="carouse2">
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <img src="eu/eu.jpg" class="d-block" alt="Imagem 1">
+            </div>
+            <div class="carousel-item">
+                <img src="eu/euMarcelo.jpg" class="d-block" alt="Imagem 2">
+            </div>
+            <div class="carousel-item">
+                <img src="eu/eu2.jpg" class="d-block" alt="Imagem 3">
+            </div>
+            <div class="carousel-item">
+                <img src="eu/eu3.jpg" class="d-block" alt="Imagem 2">
+            </div>
+            <div class="carousel-item">
+                <img src="eu/eu4.jpg" class="d-block" alt="Imagem 3">
+            </div>
+            <div class="carousel-item">
+                <img src="eu/eu5.jpg" class="d-block" alt="Imagem 2">
+            </div>
+            <div class="carousel-item">
+                <img src="eu/eu6.jpg" class="d-block" alt="Imagem 3">
+            </div>
+            <div class="carousel-item">
+                <img src="eu/eu7.jpg" class="d-block" alt="Imagem 2">
+            </div>
+            <div class="carousel-item">
+                <img src="eu/eu8.jpg" class="d-block" alt="Imagem 3">
+            </div>      <div class="carousel-item">
+                <img src="eu/eu9.jpg" class="d-block" alt="Imagem 2">
+            </div>
+            <div class="carousel-item">
+                <img src="eu/eu10.jpg" class="d-block" alt="Imagem 3">
+            </div>      <div class="carousel-item">
+                <img src="eu/eu11.jpg" class="d-block" alt="Imagem 2">
+            </div>
+            <div class="carousel-item">
+                <img src="eu/eu12.jpg" class="d-block" alt="Imagem 3">
+            </div>      <div class="carousel-item">
+                <img src="eu/eu13.jpg" class="d-block" alt="Imagem 2">
+            </div>
+            <div class="carousel-item">
+                <img src="eu/eu14.jpg" class="d-block" alt="Imagem 3">
+            </div>      <div class="carousel-item">
+                <img src="eu/eu15.jpeg" class="d-block" alt="Imagem 2">
+            </div>
+            <div class="carousel-item">
+                <img src="eu/eu16.jpeg" class="d-block" alt="Imagem 3">
+            </div>
+            <div class="carousel-item">
+                <img src="eu/euMarcelo2.jpg" class="d-block" alt="Imagem 3">
+            </div>
+        </div>
+        <a class="carousel-control-prev" href="#carouselExample2" role="button" data-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="sr-only">Anterior</span>
+        </a>
+        <a class="carousel-control-next" href="#carouselExample2" role="button" data-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="sr-only">Próximo</span>
+        </a>
+    </div>
+    
+</div>
+
+<!-- Footer -->
+<div class="footer">
+    <p>&copy; Feito por Murilão com <i class="fas fa-heart"></i> e obviamente  <span style="color:#701cf8">Magia</span><i class="fas fa-magic"></i></p>
+</div>
+
+<script>
+    document.getElementById('magicCard').addEventListener('click', function () {
+        const message = document.getElementById('magicMessage');
+        message.style.display = message.style.display === 'block' ? 'none' : 'block';
+    });
+        // Inicia os carrosséis automaticamente
+        $('.carousel').carousel({
+        interval: 3000 // Intervalo de 3 segundos
+    });
+</script>
+
+</body>
+</html>
